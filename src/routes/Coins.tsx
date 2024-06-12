@@ -25,7 +25,8 @@ const Coin = styled.li`
   border-radius: 15px;
   margin-bottom: 10px;
   a {
-    display: block;
+    display: flex;
+    align-items: center;
     padding: 20px;
     transition: color 0.2s ease-in;
   }
@@ -34,6 +35,13 @@ const Coin = styled.li`
       color: ${(props) => props.theme.accentColor};
     }
   }
+`;
+
+const Img = styled.img`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
 `;
 
 const Loader = styled.div`
@@ -78,7 +86,13 @@ function Coins() {
         <CoinsList>
           {coins.map((coin) => (
             <Coin key={coin.id}>
-              <Link to={`/${coin.id}`}>{coin.name} &rarr;</Link>
+              <Link to={`/${coin.id}`}>
+                <Img
+                  src={`https://cryptoicon-api.pages.dev/api/icon/${coin.symbol.toLowerCase()}`}
+                  alt={coin.symbol.toLowerCase()}
+                />
+                {coin.name} &rarr;
+              </Link>
             </Coin>
           ))}
         </CoinsList>
