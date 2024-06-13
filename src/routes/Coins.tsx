@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { styled } from "styled-components";
 
-const Contianer = styled.div`
+const Container = styled.div`
   max-width: 480px;
   padding: 0px 20px;
   margin: 0 auto;
@@ -68,15 +68,15 @@ function Coins() {
         const response = await fetch("https://api.coinpaprika.com/v1/coins");
         const data = await response.json();
         setCoins(data.slice(0, 100));
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     })();
+    setLoading(false);
   }, []);
 
   return (
-    <Contianer>
+    <Container>
       <Header>
         <Title>Coins</Title>
       </Header>
@@ -97,7 +97,7 @@ function Coins() {
           ))}
         </CoinsList>
       )}
-    </Contianer>
+    </Container>
   );
 }
 
