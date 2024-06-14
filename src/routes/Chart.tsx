@@ -13,7 +13,7 @@ interface IOhlcv {
   market_cap: number;
 }
 
-function Chart({ coinId }: { coinId: string }) {
+function Chart({ coinId, isDark }: { coinId: string; isDark: boolean }) {
   const { isPending, data } = useQuery<IOhlcv[]>({
     queryKey: ["ohlcvHistory", coinId],
     queryFn: () => fetchOhlcvHistory(coinId),
@@ -44,7 +44,7 @@ function Chart({ coinId }: { coinId: string }) {
           ]}
           options={{
             theme: {
-              mode: "dark",
+              mode: isDark ? "dark" : "light",
             },
             chart: {
               height: 300,
