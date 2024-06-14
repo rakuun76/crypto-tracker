@@ -205,8 +205,8 @@ function Coin() {
               <span>${info?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Price(USD):</span>
-              <span>${ticker?.quotes.USD.price.toFixed(0)}</span>
+              <span>Open Source:</span>
+              <span>{info?.open_source ? "Yes" : "No"}</span>
             </OverviewItem>
           </Overview>
           <Description>{info?.description}</Description>
@@ -232,7 +232,16 @@ function Coin() {
 
           <Switch>
             <Route path={"/:coinId/price"}>
-              <Price />
+              <Price
+                price={ticker?.quotes.USD.price}
+                volume_24h={ticker?.quotes.USD.volume_24h}
+                market_cap={ticker?.quotes.USD.market_cap}
+                ath_price={ticker?.quotes.USD.ath_price}
+                ath_date={ticker?.quotes.USD.ath_date}
+                percent_from_price_ath={
+                  ticker?.quotes.USD.percent_from_price_ath
+                }
+              />
             </Route>
             <Route path={"/:coinId/chart"}>
               <Chart />
