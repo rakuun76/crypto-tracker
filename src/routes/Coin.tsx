@@ -23,6 +23,12 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+
+  a {
+    position: absolute;
+    left: 10px;
+  }
 `;
 
 const Title = styled.h1``;
@@ -189,6 +195,7 @@ function Coin() {
         <title>{isPending ? "Loading..." : info?.name}</title>
       </Helmet>
       <Header>
+        <Link to="/">&larr;</Link>
         <Title>{isPending ? "Loading..." : info?.name}</Title>
       </Header>
       {isPending ? (
