@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   Link,
   Route,
@@ -9,6 +8,8 @@ import {
 import { styled } from "styled-components";
 import Chart from "./Chart";
 import Price from "./Price";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCoin, fetchTicker } from "../api";
 
 const Container = styled.div`
   max-width: 480px;
@@ -38,6 +39,7 @@ const Overview = styled.div`
 `;
 
 const OverviewItem = styled.div`
+  width: 33%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -76,7 +78,7 @@ const Tab = styled.span<{ isActive: boolean }>`
   }
 `;
 
-interface CoinInfo {
+interface IInfo {
   id: string;
   name: string;
   symbol: string;
@@ -131,7 +133,7 @@ interface CoinInfo {
   last_data_at: string;
 }
 
-interface PriceInfo {
+interface ITicker {
   id: string;
   name: string;
   symbol: string;
@@ -166,37 +168,26 @@ interface PriceInfo {
 
 function Coin() {
   const { coinId } = useParams<{ coinId: string }>();
-  const [loading, setLoading] = useState(true);
-  const [info, setInfo] = useState<CoinInfo>();
-  const [price, setPrice] = useState<PriceInfo>();
   const priceMatch = useRouteMatch("/:coinId/price");
   const chartMatch = useRouteMatch("/:coinId/chart");
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const infoData = await (
-          await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-        ).json();
-        const priceData = await (
-          await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-        ).json();
+  const { isPending: isInfoPending, data: info } = useQuery<IInfo>({
+    queryKey: ["info", coinId],
+    queryFn: () => fetchCoin(coinId),
+  });
+  const { isPending: isTickerPending, data: ticker } = useQuery<ITicker>({
+    queryKey: ["ticker", coinId],
+    queryFn: () => fetchTicker(coinId),
+  });
 
-        setInfo(infoData);
-        setPrice(priceData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    })();
-    setLoading(false);
-  }, []);
+  const isPending = isInfoPending || isTickerPending;
 
   return (
     <Container>
       <Header>
-        <Title>{loading ? "Loading..." : info?.name}</Title>
+        <Title>{isPending ? "Loading..." : info?.name}</Title>
       </Header>
-      {loading ? (
+      {isPending ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
@@ -218,11 +209,11 @@ function Coin() {
           <Overview>
             <OverviewItem>
               <span>Total Suply:</span>
-              <span>{price?.total_supply}</span>
+              <span>{ticker?.total_supply}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Max Supply:</span>
-              <span>{price?.max_supply}</span>
+              <span>{ticker?.max_supply}</span>
             </OverviewItem>
           </Overview>
 
