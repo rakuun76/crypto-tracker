@@ -10,6 +10,7 @@ import Chart from "./Chart";
 import Price from "./Price";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCoin, fetchTicker } from "../api";
+import { Helmet } from "react-helmet";
 
 const Container = styled.div`
   max-width: 480px;
@@ -184,6 +185,9 @@ function Coin() {
 
   return (
     <Container>
+      <Helmet>
+        <title>{isPending ? "Loading..." : info?.name}</title>
+      </Helmet>
       <Header>
         <Title>{isPending ? "Loading..." : info?.name}</Title>
       </Header>
@@ -201,8 +205,8 @@ function Coin() {
               <span>${info?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{info?.open_source ? "Yes" : "No"}</span>
+              <span>Price(USD):</span>
+              <span>${ticker?.quotes.USD.price.toFixed(0)}</span>
             </OverviewItem>
           </Overview>
           <Description>{info?.description}</Description>
