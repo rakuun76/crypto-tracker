@@ -12,6 +12,7 @@ import Price from "./Price";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCoin, fetchTicker } from "../api";
 import { Helmet } from "react-helmet";
+import ToggleBtn from "../components/ToggleBtn";
 
 const Container = styled.div`
   max-width: 480px;
@@ -31,6 +32,11 @@ const Header = styled.header`
     left: 10px;
     display: block;
     font-size: 26px;
+  }
+
+  input {
+    position: absolute;
+    right: 10px;
   }
 `;
 
@@ -210,6 +216,7 @@ function Coin() {
         <Title>
           {state?.name ? state.name : isPending ? "Loading..." : info?.name}
         </Title>
+        <ToggleBtn></ToggleBtn>
       </Header>
       {isPending ? (
         <Loader>Loading...</Loader>

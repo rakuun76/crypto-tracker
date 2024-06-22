@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchOhlcvHistory } from "../api";
 import ApexChart from "react-apexcharts";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "../atom";
 
 interface IOhlcv {
   time_open: number;
@@ -14,6 +16,7 @@ interface IOhlcv {
 }
 
 function Chart({ coinId }: { coinId: string }) {
+  const isDark = useRecoilValue(isDarkAtom);
   const { isPending, data } = useQuery<IOhlcv[]>({
     queryKey: ["ohlcvHistory", coinId],
     queryFn: () => fetchOhlcvHistory(coinId),
@@ -44,7 +47,7 @@ function Chart({ coinId }: { coinId: string }) {
           ]}
           options={{
             theme: {
-              mode: "dark",
+              mode: isDark ? "dark" : "light",
             },
             chart: {
               height: 300,

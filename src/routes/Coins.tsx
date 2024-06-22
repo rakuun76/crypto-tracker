@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { styled } from "styled-components";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCoins } from "../api";
+import ToggleBtn from "../components/ToggleBtn";
 
 const Container = styled.div`
   max-width: 480px;
@@ -14,6 +15,12 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+
+  input {
+    position: absolute;
+    right: 10px;
+  }
 `;
 
 const Title = styled.h1`
@@ -73,6 +80,7 @@ function Coins() {
     <Container>
       <Header>
         <Title>Crypto Tracker</Title>
+        <ToggleBtn></ToggleBtn>
       </Header>
       {isPending ? (
         <Loader>Loading...</Loader>
