@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { styled } from "styled-components";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCoins } from "../api";
-import { Helmet } from "react-helmet";
 
 const Container = styled.div`
   max-width: 480px;
@@ -17,15 +16,18 @@ const Header = styled.header`
   align-items: center;
 `;
 
-const Title = styled.h1``;
+const Title = styled.h1`
+  font-size: 32px;
+  font-weight: 600;
+`;
 
 const CoinsList = styled.ul``;
 
 const Coin = styled.li`
   background-color: ${(props) => props.theme.boxColor};
-  color: ${(props) => props.theme.textColor};
   border-radius: 15px;
   margin-bottom: 10px;
+  font-size: 18px;
   a {
     display: flex;
     align-items: center;
@@ -48,6 +50,7 @@ const Img = styled.img`
 
 const Loader = styled.div`
   text-align: center;
+  font-size: 24px;
 `;
 
 interface ICoin {
@@ -68,11 +71,8 @@ function Coins() {
 
   return (
     <Container>
-      <Helmet>
-        <title>Coins</title>
-      </Helmet>
       <Header>
-        <Title>Coins</Title>
+        <Title>Crypto Tracker</Title>
       </Header>
       {isPending ? (
         <Loader>Loading...</Loader>
@@ -80,7 +80,12 @@ function Coins() {
         <CoinsList>
           {coins?.slice(0, 100).map((coin) => (
             <Coin key={coin.id}>
-              <Link to={`/crypto-tracker/${coin.id}`}>
+              <Link
+                to={{
+                  pathname: `/crypto-tracker/${coin.id}`,
+                  state: { name: coin.name },
+                }}
+              >
                 <Img
                   src={`https://cryptoicon-api.pages.dev/api/icon/${coin.symbol.toLowerCase()}`}
                   alt={coin.symbol.toLowerCase()}

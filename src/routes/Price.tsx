@@ -1,5 +1,24 @@
 import { styled } from "styled-components";
 
+const Overview = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap: 20px;
+  justify-items: center;
+  align-items: center;
+  background-color: ${(props) => props.theme.boxColor};
+  padding: 10px 20px;
+  border-radius: 10px;
+`;
+
+const Metrics = styled.div`
+  font-weight: 600;
+  text-transform: uppercase;
+`;
+
+const Value = styled.div``;
+
 interface IPrice {
   price?: number;
   volume_24h?: number;
@@ -8,23 +27,6 @@ interface IPrice {
   ath_date?: string;
   percent_from_price_ath?: number;
 }
-
-const Overview = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(6, 1fr);
-  gap: 20px;
-  justify-items: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 10px 20px;
-  border-radius: 10px;
-
-  span:nth-child(odd) {
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-`;
 
 function Price({
   price,
@@ -36,18 +38,18 @@ function Price({
 }: IPrice) {
   return (
     <Overview>
-      <span>price(USD)</span>
-      <span>${price?.toFixed(3)}</span>
-      <span>volume(24h)</span>
-      <span>${volume_24h?.toFixed(3)}</span>
-      <span>market cap</span>
-      <span>${market_cap?.toFixed(3)}</span>
-      <span>ath price</span>
-      <span>${ath_price?.toFixed(3)}</span>
-      <span>ath date</span>
-      <span>{ath_date?.slice(0, 10)}</span>
-      <span>percent from ath</span>
-      <span>{percent_from_price_ath}%</span>
+      <Metrics>price(USD)</Metrics>
+      <Value>${price?.toFixed(3)}</Value>
+      <Metrics>volume(24h)</Metrics>
+      <Value>${volume_24h?.toFixed(3)}</Value>
+      <Metrics>market cap</Metrics>
+      <Value>${market_cap?.toFixed(3)}</Value>
+      <Metrics>ath price</Metrics>
+      <Value>${ath_price?.toFixed(3)}</Value>
+      <Metrics>ath date</Metrics>
+      <Value>{ath_date?.slice(0, 10)}</Value>
+      <Metrics>percent from ath</Metrics>
+      <Value>{percent_from_price_ath}%</Value>
     </Overview>
   );
 }

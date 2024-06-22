@@ -3,6 +3,7 @@ import {
   Route,
   Switch,
   useParams,
+  useLocation,
   useRouteMatch,
 } from "react-router-dom";
 import { styled } from "styled-components";
@@ -28,19 +29,25 @@ const Header = styled.header`
   a {
     position: absolute;
     left: 10px;
+    display: block;
+    font-size: 26px;
   }
 `;
 
-const Title = styled.h1``;
+const Title = styled.h1`
+  font-size: 32px;
+  font-weight: 600;
+`;
 
 const Loader = styled.div`
   text-align: center;
+  font-size: 24px;
 `;
 
 const Overview = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.boxColor};
   padding: 10px 20px;
   border-radius: 10px;
 `;
@@ -50,10 +57,11 @@ const OverviewItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 
   span:first-child {
-    font-size: 10px;
-    font-weight: 400;
+    font-size: 18px;
+    font-weight: 600;
     text-transform: uppercase;
     margin-bottom: 5px;
   }
@@ -73,9 +81,9 @@ const Tabs = styled.div`
 const Tab = styled.span<{ isActive: boolean }>`
   text-align: center;
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.boxColor};
   padding: 7px 0px;
   border-radius: 10px;
   color: ${(props) =>
@@ -175,8 +183,9 @@ interface ITicker {
 
 function Coin() {
   const { coinId } = useParams<{ coinId: string }>();
-  const priceMatch = useRouteMatch("/:coinId/price");
-  const chartMatch = useRouteMatch("/:coinId/chart");
+  const { state } = useLocation<{ name: string }>();
+  const priceMatch = useRouteMatch("/crypto-tracker/:coinId/price");
+  const chartMatch = useRouteMatch("/crypto-tracker/:coinId/chart");
 
   const { isPending: isInfoPending, data: info } = useQuery<IInfo>({
     queryKey: ["info", coinId],
@@ -192,11 +201,15 @@ function Coin() {
   return (
     <Container>
       <Helmet>
-        <title>{isPending ? "Loading..." : info?.name}</title>
+        <title>
+          {state?.name ? state.name : isPending ? "Loading..." : info?.name}
+        </title>
       </Helmet>
       <Header>
         <Link to="/crypto-tracker">&larr;</Link>
-        <Title>{isPending ? "Loading..." : info?.name}</Title>
+        <Title>
+          {state?.name ? state.name : isPending ? "Loading..." : info?.name}
+        </Title>
       </Header>
       {isPending ? (
         <Loader>Loading...</Loader>
@@ -204,26 +217,28 @@ function Coin() {
         <>
           <Overview>
             <OverviewItem>
-              <span>Rank:</span>
+              <span>Rank</span>
               <span>{info?.rank}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Symbol:</span>
+              <span>Symbol</span>
               <span>${info?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{info?.open_source ? "Yes" : "No"}</span>
+              <span>started</span>
+              <span>{info?.started_at.match(/^\d{4}-\d{2}-\d{2}/)}</span>
             </OverviewItem>
           </Overview>
+
           <Description>{info?.description}</Description>
+
           <Overview>
             <OverviewItem>
-              <span>Total Suply:</span>
+              <span>Total Suply</span>
               <span>{ticker?.total_supply}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Max Supply:</span>
+              <span>Max Supply</span>
               <span>{ticker?.max_supply}</span>
             </OverviewItem>
           </Overview>
@@ -238,6 +253,9 @@ function Coin() {
           </Tabs>
 
           <Switch>
+            <Route path={"/crypto-tracker/:coinId/chart"}>
+              <Chart coinId={coinId} />
+            </Route>
             <Route path={"/crypto-tracker/:coinId/price"}>
               <Price
                 price={ticker?.quotes.USD.price}
@@ -249,9 +267,6 @@ function Coin() {
                   ticker?.quotes.USD.percent_from_price_ath
                 }
               />
-            </Route>
-            <Route path={"/crypto-tracker/:coinId/chart"}>
-              <Chart coinId={coinId} />
             </Route>
           </Switch>
         </>

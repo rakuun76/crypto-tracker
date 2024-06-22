@@ -66,6 +66,14 @@ function Chart({ coinId }: { coinId: string }) {
                 formatter: (value) => `$${value.toFixed(2)}`,
               },
             },
+            plotOptions: {
+              candlestick: {
+                colors: {
+                  upward: "#EF403C",
+                  downward: "#27496D",
+                },
+              },
+            },
           }}
         />
       )}
