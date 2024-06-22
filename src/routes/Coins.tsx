@@ -22,8 +22,8 @@ const Title = styled.h1``;
 const CoinsList = styled.ul``;
 
 const Coin = styled.li`
-  background-color: ${(props) => props.theme.textColor};
-  color: ${(props) => props.theme.bgColor};
+  background-color: ${(props) => props.theme.boxColor};
+  color: ${(props) => props.theme.textColor};
   border-radius: 15px;
   margin-bottom: 10px;
   a {
@@ -60,11 +60,7 @@ interface ICoin {
   type: string;
 }
 
-interface ICoinsProps {
-  toggleDark: () => void;
-}
-
-function Coins({ toggleDark }: ICoinsProps) {
+function Coins() {
   const { isPending, data: coins } = useQuery<ICoin[]>({
     queryKey: ["coins"],
     queryFn: fetchCoins,
@@ -77,7 +73,6 @@ function Coins({ toggleDark }: ICoinsProps) {
       </Helmet>
       <Header>
         <Title>Coins</Title>
-        <button onClick={toggleDark}>Toggle Dark Mode</button>
       </Header>
       {isPending ? (
         <Loader>Loading...</Loader>
@@ -85,7 +80,7 @@ function Coins({ toggleDark }: ICoinsProps) {
         <CoinsList>
           {coins?.slice(0, 100).map((coin) => (
             <Coin key={coin.id}>
-              <Link to={`/${coin.id}`}>
+              <Link to={`/crypto-tracker/${coin.id}`}>
                 <Img
                   src={`https://cryptoicon-api.pages.dev/api/icon/${coin.symbol.toLowerCase()}`}
                   alt={coin.symbol.toLowerCase()}

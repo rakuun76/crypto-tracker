@@ -173,11 +173,7 @@ interface ITicker {
   };
 }
 
-interface ICoinProps {
-  isDark: boolean;
-}
-
-function Coin({ isDark }: ICoinProps) {
+function Coin() {
   const { coinId } = useParams<{ coinId: string }>();
   const priceMatch = useRouteMatch("/:coinId/price");
   const chartMatch = useRouteMatch("/:coinId/chart");
@@ -199,7 +195,7 @@ function Coin({ isDark }: ICoinProps) {
         <title>{isPending ? "Loading..." : info?.name}</title>
       </Helmet>
       <Header>
-        <Link to="/">&larr;</Link>
+        <Link to="/crypto-tracker">&larr;</Link>
         <Title>{isPending ? "Loading..." : info?.name}</Title>
       </Header>
       {isPending ? (
@@ -234,15 +230,15 @@ function Coin({ isDark }: ICoinProps) {
 
           <Tabs>
             <Tab isActive={chartMatch !== null}>
-              <Link to={`/${coinId}/chart`}>Chart</Link>
+              <Link to={`/crypto-tracker/${coinId}/chart`}>Chart</Link>
             </Tab>
             <Tab isActive={priceMatch !== null}>
-              <Link to={`/${coinId}/price`}>Price</Link>
+              <Link to={`/crypto-tracker/${coinId}/price`}>Price</Link>
             </Tab>
           </Tabs>
 
           <Switch>
-            <Route path={"/:coinId/price"}>
+            <Route path={"/crypto-tracker/:coinId/price"}>
               <Price
                 price={ticker?.quotes.USD.price}
                 volume_24h={ticker?.quotes.USD.volume_24h}
@@ -254,8 +250,8 @@ function Coin({ isDark }: ICoinProps) {
                 }
               />
             </Route>
-            <Route path={"/:coinId/chart"}>
-              <Chart coinId={coinId} isDark={isDark} />
+            <Route path={"/crypto-tracker/:coinId/chart"}>
+              <Chart coinId={coinId} />
             </Route>
           </Switch>
         </>
